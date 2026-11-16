@@ -1,0 +1,33 @@
+[Unit]
+Description=ARoute Core
+Documentation=https://github.com/R-BR-dev/aroute-core
+After=dbus.service
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/arouted
+Restart=on-failure
+RestartSec=2
+
+# /run/aroute holds the CLI socket, /var/lib/aroute the state (from M1).
+RuntimeDirectory=aroute
+RuntimeDirectoryMode=0750
+StateDirectory=aroute
+StateDirectoryMode=0700
+
+# Optional overrides, for example AROUTE_LISTEN=192.168.77.1:8080
+EnvironmentFile=-/etc/aroute/arouted.env
+
+# Sandboxing. It will be loosened deliberately, option by option, as the Core
+# starts to manage the network.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target
